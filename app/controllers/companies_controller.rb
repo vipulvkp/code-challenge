@@ -1,5 +1,6 @@
 class CompaniesController < ApplicationController
   before_action :set_company, except: [:index, :create, :new]
+  rescue_from ActiveRecord::RecordInvalid, with: :handle_invalid_updates
 
   def index
     @companies = Company.all
@@ -32,7 +33,25 @@ class CompaniesController < ApplicationController
     end
   end  
 
+  def destroy
+     message = "Deleted"
+     begin 
+       c = Company.find(params[:id]) 
+       c.destroy 
+     rescue
+       message = "Some error occured while deleting this company" 
+     end
+     redirect_to companies_path, notice: message
+  end
+  
+
   private
+
+  def handle_invalid_updates(err)
+    p "coming in handle invalid updates"
+    p err
+    render :edit
+  end
 
   def company_params
     params.require(:company).permit(

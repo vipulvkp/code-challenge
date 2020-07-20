@@ -1,5 +1,13 @@
 <div class="container py-5">
   <h3>Edit Company</h3>
   <%= link_to "< Company", company_path(@company) %>
+  <%if @company.errors.messages.present?%>
+	  <div>
+	    <p> Please correct below errors<p>
+	    <% @company.errors.messages.each do |key, value| %>
+	      <p style="color:red"><%="#{key} : #{value.first}"%></p>
+	    <%end%>
+	  </div>
+  <%end%>
   <%= render "form" %>
 </div>
